@@ -16,12 +16,12 @@ namespace ExpressionInterpreter.Logic
 
         public double OperandLeft
         {
-            get { return this._operandLeft; }
+            get { return _operandLeft; }
         }
 
         public double OperandRight
         {
-            get { return this._operandLeft; }
+            get { return _operandRight; }
         }
 
         public char Op
@@ -118,7 +118,7 @@ namespace ExpressionInterpreter.Logic
         /// <param name="pos"></param>
         private void SkipBlanks(ref int pos)
         {
-            if (ExpressionText[pos] == ' ')
+           // if (ExpressionText[pos] == ' ')
                 pos++;
         }
 
