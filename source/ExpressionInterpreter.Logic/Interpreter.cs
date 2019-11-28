@@ -42,7 +42,28 @@ namespace ExpressionInterpreter.Logic
         /// </summary>
         public double Calculate()
         {
-            throw new NotImplementedException();
+            double erg = 0.0;
+            if (Op == '+')
+            {
+                erg = _operandLeft + _operandRight;
+            }
+            else if (Op == '-')
+            {
+                erg = _operandLeft - _operandRight;
+            }
+            else if (Op == '*')
+            {
+                erg = _operandLeft - _operandRight;
+            }
+            else if (Op == '/')
+            {
+                erg = _operandLeft - _operandRight;
+            }
+            else
+            {
+                throw new Exception($"Operator {Op} ist fehlerhaft!");
+            }
+            return erg;
         }
 
         /// <summary>
