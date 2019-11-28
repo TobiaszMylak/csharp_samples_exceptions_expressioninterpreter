@@ -95,7 +95,6 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private double ScanNumber(ref int pos)
         {
-
             throw new NotImplementedException();
         }
 
@@ -106,10 +105,8 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private int ScanInteger(ref int pos)
         {
-           
-          // if(ExpressionText[pos])
-            
-            throw new NotImplementedException();
+            int number = ExpressionText[pos] - '0';
+            return number;
         }
 
         /// <summary>
