@@ -16,12 +16,12 @@ namespace ExpressionInterpreter.Logic
 
         public double OperandLeft
         {
-            get { throw new NotImplementedException(); }
+            get { return this._operandLeft; }
         }
 
         public double OperandRight
         {
-            get { throw new NotImplementedException(); }
+            get { return this._operandLeft; }
         }
 
         public char Op
@@ -79,7 +79,12 @@ namespace ExpressionInterpreter.Logic
         /// </summary>
         public void ParseExpressionStringToFields()
         {
-            throw new NotImplementedException();
+            int pos = 0;
+            int expressiontextl = ExpressionText.Length;
+
+           //while
+            
+            //throw new NotImplementedException();
         }
 
         /// <summary>
@@ -90,6 +95,7 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private double ScanNumber(ref int pos)
         {
+
             throw new NotImplementedException();
         }
 
@@ -100,6 +106,9 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private int ScanInteger(ref int pos)
         {
+           
+          // if(ExpressionText[pos])
+            
             throw new NotImplementedException();
         }
 
@@ -109,7 +118,8 @@ namespace ExpressionInterpreter.Logic
         /// <param name="pos"></param>
         private void SkipBlanks(ref int pos)
         {
-            throw new NotImplementedException();
+            if (ExpressionText[pos] == ' ')
+                pos++;
         }
 
         /// <summary>
