@@ -95,7 +95,9 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private double ScanNumber(ref int pos)
         {
-            throw new NotImplementedException();
+            double number = ExpressionText[pos] - '0';
+            pos++;
+            return number;
         }
 
         /// <summary>
@@ -106,6 +108,7 @@ namespace ExpressionInterpreter.Logic
         private int ScanInteger(ref int pos)
         {
             int number = ExpressionText[pos] - '0';
+            pos++;
             return number;
         }
 
