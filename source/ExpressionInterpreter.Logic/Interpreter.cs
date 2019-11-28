@@ -32,6 +32,7 @@ namespace ExpressionInterpreter.Logic
 
         public void Parse(string expressionText)
         {
+            //To be done
             ExpressionText = expressionText;
             ParseExpressionStringToFields();
         }
