@@ -12,7 +12,7 @@ namespace ExpressionInterpreter.Logic
         List<Exception> exlist = new List<Exception>();
 
 
-        bool _intIsNegative;                //ist die Ganzzahl positiv oder Negativ
+        bool _nrIsNegative;                //ist die Ganzzahl positiv oder Negativ
         bool _intIsDecimalPlace;          // ist die Ganzzahl hinter dem Komma 
         /// <summary>
         /// Eingelesener Text
@@ -98,9 +98,14 @@ namespace ExpressionInterpreter.Logic
         
             int expressiontextl = ExpressionText.Length;
             SkipBlanks(ref pos);
+            OperandLeft = ScanNumber(ref pos);
+            SkipBlanks(ref pos);
+            ScanOperator(ref pos);
+            SkipBlanks(ref pos);
+            OperandRight = ScanNumber(ref pos);
+            SkipBlanks(ref pos);
 
-           //while
-            
+            //while
             //throw new NotImplementedException();
         }
 
@@ -113,8 +118,15 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private double ScanNumber(ref int pos)
         {
-            double number = ExpressionText[pos] - '0';
-            pos++;
+            double number = 0;
+            _nrIsNegative = CheckIsNegativeNumber(ref pos);
+            ScanInteger(ref pos);
+
+
+            if (_nrIsNegative)
+            {
+                number = number * (-1);
+            }
             return number;
         }
 
@@ -143,13 +155,29 @@ namespace ExpressionInterpreter.Logic
             }
 
         }
-        private void IsNegativeNumber( ref int pos)
+        private bool CheckIsNegativeNumber(ref int pos)
         {
-            if(ExpressionText[pos] == '-')
+            if (ExpressionText[pos] == '-')
             {
                 pos++;
+                return true;
             }
-            _intIsNegative = true;
+            else
+                return false;
+
+        }
+
+        private void ScanOperator(ref int pos)
+        {
+            if (ExpressionText[pos] == '+' || ExpressionText[pos] == '-' ||
+               ExpressionText[pos] == '*' || ExpressionText[pos] == '/')
+            {
+                Op = ExpressionText[pos];
+                pos++;
+            }
+            else
+                throw new InvalidOperationException();
+
         }
 
         /// <summary>
