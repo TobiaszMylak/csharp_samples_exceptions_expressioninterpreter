@@ -11,6 +11,9 @@ namespace ExpressionInterpreter.Logic
         private char _op;  // Operator     
         List<Exception> exlist = new List<Exception>();
 
+
+        bool _intIsNegativ;                //ist die Ganzzahl positiv oder Negativ
+        bool _intIsDecimalPlace;          // ist die Ganzzahl hinter dem Komma 
         /// <summary>
         /// Eingelesener Text
         /// </summary>
@@ -18,16 +21,20 @@ namespace ExpressionInterpreter.Logic
 
         public double OperandLeft
         {
+            set { OperandLeft = value; }
             get { return _operandLeft; }
         }
 
         public double OperandRight
         {
+            
+            set { OperandRight = value; }
             get { return _operandRight; }
         }
 
         public char Op
         {
+            set { _op = value; }
             get { return _op; }
         }
 
@@ -56,7 +63,7 @@ namespace ExpressionInterpreter.Logic
             }
             else if (Op == '*')
             {
-                erg = _operandLeft - _operandRight;
+                erg = _operandLeft * _operandRight;
             }
             else if (Op == '/')
             {
@@ -66,7 +73,7 @@ namespace ExpressionInterpreter.Logic
                 }
                 else
                 {
-                    erg = _operandLeft - _operandRight;
+                    erg = _operandLeft / _operandRight;
                 }
             }
             else
