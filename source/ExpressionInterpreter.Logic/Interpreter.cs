@@ -12,7 +12,7 @@ namespace ExpressionInterpreter.Logic
         List<Exception> exlist = new List<Exception>();
 
 
-        bool _intIsNegativ;                //ist die Ganzzahl positiv oder Negativ
+        bool _intIsNegative;                //ist die Ganzzahl positiv oder Negativ
         bool _intIsDecimalPlace;          // ist die Ganzzahl hinter dem Komma 
         /// <summary>
         /// Eingelesener Text
@@ -21,14 +21,13 @@ namespace ExpressionInterpreter.Logic
 
         public double OperandLeft
         {
-            set { OperandLeft = value; }
+            set { _operandLeft = value; }
             get { return _operandLeft; }
         }
 
         public double OperandRight
         {
-            
-            set { OperandRight = value; }
+            set { _operandRight = value; }
             get { return _operandRight; }
         }
 
@@ -96,12 +95,15 @@ namespace ExpressionInterpreter.Logic
         public void ParseExpressionStringToFields()
         {
             int pos = 0;
+        
             int expressiontextl = ExpressionText.Length;
+            SkipBlanks(ref pos);
 
            //while
             
             //throw new NotImplementedException();
         }
+
 
         /// <summary>
         /// Ein Double muss mit einer Ziffer beginnen. Gibt es Nachkommastellen,
@@ -123,6 +125,7 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private int ScanInteger(ref int pos)
         {
+           
             int number = ExpressionText[pos] - '0';
             pos++;
             return number;
@@ -134,8 +137,19 @@ namespace ExpressionInterpreter.Logic
         /// <param name="pos"></param>
         private void SkipBlanks(ref int pos)
         {
-           // if (ExpressionText[pos] == ' ')
+            while (ExpressionText[pos] == ' ')
+            {
                 pos++;
+            }
+
+        }
+        private void IsNegativeNumber( ref int pos)
+        {
+            if(ExpressionText[pos] == '-')
+            {
+                pos++;
+            }
+            _intIsNegative = true;
         }
 
         /// <summary>
