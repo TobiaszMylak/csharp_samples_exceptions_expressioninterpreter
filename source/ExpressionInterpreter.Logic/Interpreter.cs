@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace ExpressionInterpreter.Logic
@@ -7,7 +8,8 @@ namespace ExpressionInterpreter.Logic
     {
         private double _operandLeft;
         private double _operandRight;
-        private char _op;  // Operator                  
+        private char _op;  // Operator     
+        List<Exception> exlist = new List<Exception>();
 
         /// <summary>
         /// Eingelesener Text
@@ -26,7 +28,7 @@ namespace ExpressionInterpreter.Logic
 
         public char Op
         {
-            get { throw new NotImplementedException(); }
+            get { return _op; }
         }
 
 
@@ -58,7 +60,14 @@ namespace ExpressionInterpreter.Logic
             }
             else if (Op == '/')
             {
-                erg = _operandLeft - _operandRight;
+                if (_operandRight == 0)
+                {
+                    throw new DivideByZeroException();
+                }
+                else
+                {
+                    erg = _operandLeft - _operandRight;
+                }
             }
             else
             {
