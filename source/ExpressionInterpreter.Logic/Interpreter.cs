@@ -8,8 +8,9 @@ namespace ExpressionInterpreter.Logic
     {
         private double _operandLeft;
         private double _operandRight;
-        private char _op;  // Operator     
-        List<Exception> exlist = new List<Exception>();
+        private char _op;  // Operator
+
+        //string exceptionstring = "";
 
 
         bool _nrIsNegative;                //ist die Ganzzahl positiv oder Negativ
@@ -68,7 +69,8 @@ namespace ExpressionInterpreter.Logic
             {
                 if (_operandRight == 0)
                 {
-                    throw new DivideByZeroException();
+                    Exception ex = new Exception($"Exceptionmessage: Division durch 0 ist nicht erlaubt\r\n");
+                    GetExceptionTextWithInnerExceptions(ex);
                 }
                 else
                 {
@@ -77,7 +79,8 @@ namespace ExpressionInterpreter.Logic
             }
             else
             {
-                throw new Exception($"Operator {Op} ist fehlerhaft!");
+                Exception ex = new Exception($"Operator {Op} ist fehlerhaft!");
+                GetExceptionTextWithInnerExceptions(ex);
             }
             return erg;
         }
@@ -103,10 +106,6 @@ namespace ExpressionInterpreter.Logic
             SkipBlanks(ref pos);
             OperandRight = ScanNumber(ref pos);
             SkipBlanks(ref pos);
-            Calculate();
-
-            //while
-            //throw new NotImplementedException();
         }
 
 
@@ -197,7 +196,7 @@ namespace ExpressionInterpreter.Logic
             double nr = 0;
             int currentpos = pos, counter = 0, currentint = 0;
           
-            while(char.IsDigit(ExpressionText[pos]) && pos < ExpressionText.Length)
+            while(char.IsDigit(ExpressionText[pos]) && pos < ExpressionText.Length - 1)
             {
                 counter++;
 
@@ -209,12 +208,6 @@ namespace ExpressionInterpreter.Logic
                 {
                     currentint = (currentint * 10) + (ExpressionText[pos] - '0');
                 }
-
-                if (pos == ExpressionText.Length - 1) // Quick and very very dirty
-                {
-                    break;
-                }
-
                 pos++;
             }
             nr = currentint;
@@ -229,18 +222,19 @@ namespace ExpressionInterpreter.Logic
 
         private char ScanOperator(ref int pos)
         {
-            char currentoperator;
+            char currentoperator = ' ';
             if (ExpressionText[pos] == '+' || ExpressionText[pos] == '-' ||
                ExpressionText[pos] == '*' || ExpressionText[pos] == '/')
             {
                 currentoperator = ExpressionText[pos];
                 pos++;
-                return currentoperator;
-                
             }
             else
-                throw new InvalidOperationException();
-
+            {
+                Exception ex = new Exception($"Operator {Op} ist fehlerhaft!");
+                GetExceptionTextWithInnerExceptions(ex);
+            }
+            return currentoperator;
         }
 
         /// <summary>
@@ -250,7 +244,7 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         public static string GetExceptionTextWithInnerExceptions(Exception ex)
         {
-            throw new NotImplementedException();
+            return ex.ToString();
         }
     }
 }
