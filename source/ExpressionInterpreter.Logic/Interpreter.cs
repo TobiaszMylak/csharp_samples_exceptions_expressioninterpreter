@@ -96,7 +96,7 @@ namespace ExpressionInterpreter.Logic
         {
             int pos = 0;
         
-            int expressiontextl = ExpressionText.Length;
+            //int expressiontextl = ExpressionText.Length;
             SkipBlanks(ref pos);
             OperandLeft = ScanNumber(ref pos);
             SkipBlanks(ref pos);
@@ -104,6 +104,8 @@ namespace ExpressionInterpreter.Logic
             SkipBlanks(ref pos);
             OperandRight = ScanNumber(ref pos);
             SkipBlanks(ref pos);
+            // ExpressionText[pos]
+            Calculate();
 
             //while
             //throw new NotImplementedException();
@@ -121,6 +123,12 @@ namespace ExpressionInterpreter.Logic
             double number = 0;
             _nrIsNegative = CheckIsNegativeNumber(ref pos);
             number = ScanInteger(ref pos);
+            
+            if(ExpressionText[pos] == ',')
+            {
+                pos++;
+                number = number + ScanDecimalNumber(ref pos);
+            }
           
 
             if (_nrIsNegative)
@@ -138,9 +146,9 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private int ScanInteger(ref int pos)
         {
-            int number = 0;
-            int currentpos = pos;
-            if (char.IsDigit(ExpressionText[pos])) 
+            int number = 0, currentpos = pos;
+
+            if (char.IsDigit(ExpressionText[pos]) ) 
             {
                 while (char.IsDigit(ExpressionText[pos]) )
                 {
@@ -155,18 +163,6 @@ namespace ExpressionInterpreter.Logic
                     pos++;
                 }
             }
-            if (ExpressionText[pos] == ',')
-            { 
-
-            }
-            else
-            {
-                return number;
-            }
-
-
-
-     
             return number;
         }
 
@@ -193,6 +189,34 @@ namespace ExpressionInterpreter.Logic
                 pos++;
                 return false;
             }
+        }
+
+        private double ScanDecimalNumber( ref int pos)
+        {
+            double nr = 0;
+            int currentpos = pos, counter = 0, currentint = 0;
+          
+            while(char.IsDigit(ExpressionText[pos]) )
+            {
+                counter++;
+
+                if (pos == currentpos)
+                {
+                    currentint = (ExpressionText[pos] - '0');
+                }
+                else
+                {
+                    currentint = (currentint * 10) + (ExpressionText[pos] - '0');
+                }
+                pos++;
+            }
+
+            while(counter > 0)
+            {
+                nr = currentint / 10;
+                counter--;
+            }
+            return nr;
         }
 
         private char ScanOperator(ref int pos)
