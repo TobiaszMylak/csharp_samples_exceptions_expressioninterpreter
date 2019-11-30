@@ -14,7 +14,7 @@ namespace ExpressionInterpreter.Logic
 
 
         bool _nrIsNegative;                //ist die Ganzzahl positiv oder Negativ
-        bool _intIsDecimalPlace;          // ist die Ganzzahl hinter dem Komma 
+        //bool _intIsDecimalPlace;          // ist die Ganzzahl hinter dem Komma 
         /// <summary>
         /// Eingelesener Text
         /// </summary>
@@ -43,6 +43,10 @@ namespace ExpressionInterpreter.Logic
         {
             //To be done
             ExpressionText = expressionText;
+            if (string.IsNullOrEmpty(expressionText))
+            {
+                throw new Exception("Ausdruck ist null oder empty!");
+            }
             ParseExpressionStringToFields();
         }
 
@@ -100,13 +104,28 @@ namespace ExpressionInterpreter.Logic
             int pos = 0;
            
             SkipBlanks(ref pos);
-            OperandLeft = ScanNumber(ref pos);
+            try
+            {
+                OperandLeft = ScanNumber(ref pos);
+            }
+            catch(Exception e)
+            {
+                throw new Exception("Ausdruck ist null oder empty!");
+            }
+            
             SkipBlanks(ref pos);
             Op =  ScanOperator(ref pos);
             SkipBlanks(ref pos);
-            OperandRight = ScanNumber(ref pos);
+            try
+            {
+                OperandRight = ScanNumber(ref pos);
+            }
+            catch (ArgumentException e)
+            {
+                throw new ArgumentException("Ausdruck ist null oder empty!",e);
+            }
             SkipBlanks(ref pos);
-        }
+            }
 
 
         /// <summary>
@@ -145,7 +164,7 @@ namespace ExpressionInterpreter.Logic
         {
             int number = 0, currentpos = pos;
 
-            if (char.IsDigit(ExpressionText[pos]) && pos < ExpressionText.Length) 
+            if (char.IsDigit(ExpressionText[pos]) )// && pos < ExpressionText.Length) 
             {
                 while (char.IsDigit(ExpressionText[pos]) )
                 {
@@ -238,7 +257,7 @@ namespace ExpressionInterpreter.Logic
             else
             {
                 Exception ex = new Exception($"Operator {Op} ist fehlerhaft!");
-                GetExceptionTextWithInnerExceptions(ex);
+                
             }
             return currentoperator;
         }
