@@ -100,7 +100,7 @@ namespace ExpressionInterpreter.Logic
             SkipBlanks(ref pos);
             OperandLeft = ScanNumber(ref pos);
             SkipBlanks(ref pos);
-            ScanOperator(ref pos);
+            Op =  ScanOperator(ref pos);
             SkipBlanks(ref pos);
             OperandRight = ScanNumber(ref pos);
             SkipBlanks(ref pos);
@@ -120,12 +120,13 @@ namespace ExpressionInterpreter.Logic
         {
             double number = 0;
             _nrIsNegative = CheckIsNegativeNumber(ref pos);
-            ScanInteger(ref pos);
-
+            number = ScanInteger(ref pos);
+          
 
             if (_nrIsNegative)
             {
                 number = number * (-1);
+                _nrIsNegative = false;
             }
             return number;
         }
@@ -137,9 +138,35 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private int ScanInteger(ref int pos)
         {
-           
-            int number = ExpressionText[pos] - '0';
-            pos++;
+            int number = 0;
+            int currentpos = pos;
+            if (char.IsDigit(ExpressionText[pos])) 
+            {
+                while (char.IsDigit(ExpressionText[pos]) )
+                {
+                    if(pos == currentpos)
+                    {
+                        number = (ExpressionText[pos] - '0');
+                    }
+                    else
+                    {
+                        number = (number * 10) + (ExpressionText[pos] - '0');
+                    }
+                    pos++;
+                }
+            }
+            if (ExpressionText[pos] == ',')
+            { 
+
+            }
+            else
+            {
+                return number;
+            }
+
+
+
+     
             return number;
         }
 
@@ -153,7 +180,6 @@ namespace ExpressionInterpreter.Logic
             {
                 pos++;
             }
-
         }
         private bool CheckIsNegativeNumber(ref int pos)
         {
@@ -163,17 +189,22 @@ namespace ExpressionInterpreter.Logic
                 return true;
             }
             else
+            {
+                pos++;
                 return false;
-
+            }
         }
 
-        private void ScanOperator(ref int pos)
+        private char ScanOperator(ref int pos)
         {
+            char currentoperator;
             if (ExpressionText[pos] == '+' || ExpressionText[pos] == '-' ||
                ExpressionText[pos] == '*' || ExpressionText[pos] == '/')
             {
-                Op = ExpressionText[pos];
+                currentoperator = ExpressionText[pos];
                 pos++;
+                return currentoperator;
+                
             }
             else
                 throw new InvalidOperationException();
