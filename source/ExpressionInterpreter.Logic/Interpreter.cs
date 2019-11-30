@@ -95,8 +95,7 @@ namespace ExpressionInterpreter.Logic
         public void ParseExpressionStringToFields()
         {
             int pos = 0;
-        
-            //int expressiontextl = ExpressionText.Length;
+           
             SkipBlanks(ref pos);
             OperandLeft = ScanNumber(ref pos);
             SkipBlanks(ref pos);
@@ -104,7 +103,6 @@ namespace ExpressionInterpreter.Logic
             SkipBlanks(ref pos);
             OperandRight = ScanNumber(ref pos);
             SkipBlanks(ref pos);
-            // ExpressionText[pos]
             Calculate();
 
             //while
@@ -148,7 +146,7 @@ namespace ExpressionInterpreter.Logic
         {
             int number = 0, currentpos = pos;
 
-            if (char.IsDigit(ExpressionText[pos]) ) 
+            if (char.IsDigit(ExpressionText[pos]) && pos < ExpressionText.Length) 
             {
                 while (char.IsDigit(ExpressionText[pos]) )
                 {
@@ -159,6 +157,10 @@ namespace ExpressionInterpreter.Logic
                     else
                     {
                         number = (number * 10) + (ExpressionText[pos] - '0');
+                    }
+                    if (pos == ExpressionText.Length - 1) // Quick and very very dirty
+                    {
+                        break;
                     }
                     pos++;
                 }
@@ -172,7 +174,7 @@ namespace ExpressionInterpreter.Logic
         /// <param name="pos"></param>
         private void SkipBlanks(ref int pos)
         {
-            while (ExpressionText[pos] == ' ')
+            while (ExpressionText[pos] == ' ' && pos < ExpressionText.Length-1 )
             {
                 pos++;
             }
@@ -186,7 +188,6 @@ namespace ExpressionInterpreter.Logic
             }
             else
             {
-                pos++;
                 return false;
             }
         }
@@ -210,10 +211,11 @@ namespace ExpressionInterpreter.Logic
                 }
                 pos++;
             }
+            nr = currentint;
 
             while(counter > 0)
             {
-                nr = currentint / 10;
+                nr = nr / 10;
                 counter--;
             }
             return nr;
