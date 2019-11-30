@@ -196,7 +196,7 @@ namespace ExpressionInterpreter.Logic
             double nr = 0;
             int currentpos = pos, counter = 0, currentint = 0;
           
-            while(char.IsDigit(ExpressionText[pos]) && pos < ExpressionText.Length - 1)
+            while(char.IsDigit(ExpressionText[pos]) )
             {
                 counter++;
 
@@ -208,6 +208,12 @@ namespace ExpressionInterpreter.Logic
                 {
                     currentint = (currentint * 10) + (ExpressionText[pos] - '0');
                 }
+
+                if (pos == ExpressionText.Length - 1) // Quick and very very dirty
+                {
+                    break;
+                }
+
                 pos++;
             }
             nr = currentint;
