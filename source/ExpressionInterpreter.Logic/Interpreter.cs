@@ -45,9 +45,13 @@ namespace ExpressionInterpreter.Logic
             ExpressionText = expressionText;
             if (string.IsNullOrEmpty(expressionText))
             {
-                throw new Exception("Ausdruck ist null oder empty!");
+                Exception ex = new Exception($"Ausdruck ist null oder empty!");
+                GetExceptionTextWithInnerExceptions(ex);
             }
-            ParseExpressionStringToFields();
+            else
+            {
+                ParseExpressionStringToFields();
+            }
         }
 
         /// <summary>
@@ -108,9 +112,10 @@ namespace ExpressionInterpreter.Logic
             {
                 OperandLeft = ScanNumber(ref pos);
             }
-            catch(Exception e)
+            catch(Exception ex)
             {
-                throw new Exception("Ausdruck ist null oder empty!");
+                ex = new Exception($"Ausdruck ist null oder empty!");
+                GetExceptionTextWithInnerExceptions(ex);
             }
             
             SkipBlanks(ref pos);
@@ -120,12 +125,13 @@ namespace ExpressionInterpreter.Logic
             {
                 OperandRight = ScanNumber(ref pos);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                throw new ArgumentException("Ausdruck ist null oder empty!",e);
+                ex = new ArgumentException($"Ausdruck ist null oder empty!");
+                GetExceptionTextWithInnerExceptions(ex);
             }
             SkipBlanks(ref pos);
-            }
+        }
 
 
         /// <summary>
@@ -257,7 +263,6 @@ namespace ExpressionInterpreter.Logic
             else
             {
                 Exception ex = new Exception($"Operator {Op} ist fehlerhaft!");
-                
             }
             return currentoperator;
         }
