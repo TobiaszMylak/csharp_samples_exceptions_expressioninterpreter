@@ -45,8 +45,7 @@ namespace ExpressionInterpreter.Logic
             ExpressionText = expressionText;
             if (string.IsNullOrEmpty(expressionText))
             {
-                Exception ex = new Exception($"Ausdruck ist null oder empty!");
-                GetExceptionTextWithInnerExceptions(ex);
+                throw new Exception($"Ausdruck ist null oder empty!");
             }
             else
             {
@@ -77,8 +76,7 @@ namespace ExpressionInterpreter.Logic
             {
                 if (_operandRight == 0)
                 {
-                    Exception ex = new Exception($"Exceptionmessage: Division durch 0 ist nicht erlaubt\r\n");
-                    GetExceptionTextWithInnerExceptions(ex);
+                    throw new Exception($"Division durch 0 ist nicht erlaubt\r\n");
                 }
                 else
                 {
@@ -87,8 +85,7 @@ namespace ExpressionInterpreter.Logic
             }
             else
             {
-                Exception ex = new Exception($"Operator {Op} ist fehlerhaft!");
-                GetExceptionTextWithInnerExceptions(ex);
+                throw new Exception($"Operator {Op} ist fehlerhaft!");
             }
             return erg;
         }
@@ -108,28 +105,12 @@ namespace ExpressionInterpreter.Logic
             int pos = 0;
            
             SkipBlanks(ref pos);
-            try
-            {
-                OperandLeft = ScanNumber(ref pos);
-            }
-            catch(Exception ex)
-            {
-                ex = new Exception($"Ausdruck ist null oder empty!");
-                GetExceptionTextWithInnerExceptions(ex);
-            }
+            OperandLeft = ScanNumber(ref pos);
             
             SkipBlanks(ref pos);
             Op =  ScanOperator(ref pos);
             SkipBlanks(ref pos);
-            try
-            {
-                OperandRight = ScanNumber(ref pos);
-            }
-            catch (ArgumentException ex)
-            {
-                ex = new ArgumentException($"Ausdruck ist null oder empty!");
-                GetExceptionTextWithInnerExceptions(ex);
-            }
+            OperandRight = ScanNumber(ref pos);
             SkipBlanks(ref pos);
         }
 
@@ -149,7 +130,14 @@ namespace ExpressionInterpreter.Logic
             if(ExpressionText[pos] == ',')
             {
                 pos++;
-                number = number + ScanDecimalNumber(ref pos);
+                if (char.IsDigit(ExpressionText[pos]))
+                {
+                    number = number + ScanDecimalNumber(ref pos);
+                }
+                else
+                {
+                    throw new Exception("Rechter Operand ist fehlerhaft");
+                }
             }
           
 
@@ -172,7 +160,7 @@ namespace ExpressionInterpreter.Logic
 
             if (char.IsDigit(ExpressionText[pos]) )// && pos < ExpressionText.Length) 
             {
-                while (char.IsDigit(ExpressionText[pos]) )
+                while (char.IsDigit(ExpressionText[pos]) && pos != ExpressionText.Length - 1)
                 {
                     if(pos == currentpos)
                     {
@@ -181,10 +169,6 @@ namespace ExpressionInterpreter.Logic
                     else
                     {
                         number = (number * 10) + (ExpressionText[pos] - '0');
-                    }
-                    if (pos == ExpressionText.Length - 1) // Quick and very very dirty
-                    {
-                        break;
                     }
                     pos++;
                 }
@@ -262,7 +246,7 @@ namespace ExpressionInterpreter.Logic
             }
             else
             {
-                Exception ex = new Exception($"Operator {Op} ist fehlerhaft!");
+                throw new Exception($"Operator {ExpressionText[pos]} ist fehlerhaft!");
             }
             return currentoperator;
         }
@@ -274,7 +258,10 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         public static string GetExceptionTextWithInnerExceptions(Exception ex)
         {
-            return ex.ToString();
+            StringBuilder str = new StringBuilder();
+            str.Append("Exceptionmessage: ");
+            str.Append(ex.Message);
+            return str.ToString();
         }
     }
 }
