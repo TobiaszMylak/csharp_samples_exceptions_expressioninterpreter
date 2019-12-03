@@ -103,15 +103,35 @@ namespace ExpressionInterpreter.Logic
         public void ParseExpressionStringToFields()
         {
             int pos = 0;
-           
+            int explen = ExpressionText.Length - 1;
+
+
             SkipBlanks(ref pos);
+
             OperandLeft = ScanNumber(ref pos);
-            
             SkipBlanks(ref pos);
-            Op =  ScanOperator(ref pos);
-            SkipBlanks(ref pos);
-            OperandRight = ScanNumber(ref pos);
-            SkipBlanks(ref pos);
+            Op = ScanOperator(ref pos);
+            if (pos > ExpressionText.Length - 1)
+            {
+                throw new Exception("Rechter Operand ist fehlerhaft");
+            }
+            else if (ExpressionText[pos] == ',')
+            {
+                throw new ArgumentException();
+            }
+            else
+            {
+                SkipBlanks(ref pos);
+                try
+                {
+                    OperandRight = ScanNumber(ref pos);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Rechter Operand ist fehlerhaft\r\n");
+                }
+                SkipBlanks(ref pos);
+            }
         }
 
 
@@ -130,14 +150,7 @@ namespace ExpressionInterpreter.Logic
             if(ExpressionText[pos] == ',')
             {
                 pos++;
-                if (char.IsDigit(ExpressionText[pos]))
-                {
-                    number = number + ScanDecimalNumber(ref pos);
-                }
-                else
-                {
-                    throw new Exception("Rechter Operand ist fehlerhaft");
-                }
+                number = number + ScanDecimalNumber(ref pos);
             }
           
 
