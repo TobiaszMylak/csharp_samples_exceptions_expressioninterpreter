@@ -19,6 +19,7 @@ namespace ExpressionInterpreter.Logic
         /// Eingelesener Text
         /// </summary>
         public string ExpressionText { get; private set; }
+        Exception ex = new Exception("message", new Exception("inner message"));
 
         public double OperandLeft
         {
@@ -111,26 +112,22 @@ namespace ExpressionInterpreter.Logic
             OperandLeft = ScanNumber(ref pos);
             SkipBlanks(ref pos);
             Op = ScanOperator(ref pos);
-            if (pos > ExpressionText.Length - 1)
-            {
-                throw new Exception("Rechter Operand ist fehlerhaft");
-            }
-            else if (ExpressionText[pos] == ',')
-            {
-                throw new ArgumentException();
-            }
-            else
+            try
             {
                 SkipBlanks(ref pos);
                 try
                 {
                     OperandRight = ScanNumber(ref pos);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw new Exception("Rechter Operand ist fehlerhaft\r\n");
+                    throw new ArgumentException("Rechter Operand ist fehlerhaft", ex);
                 }
                 SkipBlanks(ref pos);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Rechter Operand ist fehlerhaft", ex);
             }
         }
 
@@ -145,12 +142,26 @@ namespace ExpressionInterpreter.Logic
         {
             double number = 0;
             _nrIsNegative = CheckIsNegativeNumber(ref pos);
-            number = ScanInteger(ref pos);
+            try
+            {
+                number = ScanInteger(ref pos);
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Ganzzahlanteil ist fehlerhaft", ex);
+            }
             
             if(ExpressionText[pos] == ',')
             {
                 pos++;
-                number = number + ScanDecimalNumber(ref pos);
+                try
+                {
+                    number = number + ScanDecimalNumber(ref pos);
+                }
+                catch (Exception ex)
+                {
+                    throw new ArgumentException("Nachkommaanteil ist fehlerhaft", ex);
+                }
             }
           
 
@@ -274,6 +285,17 @@ namespace ExpressionInterpreter.Logic
             StringBuilder str = new StringBuilder();
             str.Append("Exceptionmessage: ");
             str.Append(ex.Message);
+
+            Exception inner = ex.InnerException;
+            int i = 1;
+            while (inner != null)
+            {
+                str.Append($"Inner Exception{i}: ");
+                str.AppendLine(inner.Message);
+                inner = inner.InnerException;
+                i++;
+            }
+
             return str.ToString();
         }
     }
