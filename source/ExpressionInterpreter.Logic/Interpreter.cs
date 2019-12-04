@@ -106,10 +106,16 @@ namespace ExpressionInterpreter.Logic
             int pos = 0;
             int explen = ExpressionText.Length - 1;
 
-
             SkipBlanks(ref pos);
 
-            OperandLeft = ScanNumber(ref pos);
+            try
+            {
+                OperandLeft = ScanNumber(ref pos);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Linker Operand ist fehlerhaft", ex);
+            }
             SkipBlanks(ref pos);
             Op = ScanOperator(ref pos);
             try
@@ -141,29 +147,34 @@ namespace ExpressionInterpreter.Logic
         private double ScanNumber(ref int pos)
         {
             double number = 0;
-            _nrIsNegative = CheckIsNegativeNumber(ref pos);
             try
             {
-                number = ScanInteger(ref pos);
+                _nrIsNegative = CheckIsNegativeNumber(ref pos);
+                try
+                {
+                    number = ScanInteger(ref pos);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Zahl fehlt komplett", ex);
+                }
+                if (ExpressionText[pos] == ',')
+                {
+                    try
+                    {
+                        pos++;
+                        number = number + ScanDecimalNumber(ref pos);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ArgumentException("Nachkommaanteil ist fehlerhaft", ex);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 throw new ArgumentException("Ganzzahlanteil ist fehlerhaft", ex);
             }
-            
-            if(ExpressionText[pos] == ',')
-            {
-                pos++;
-                try
-                {
-                    number = number + ScanDecimalNumber(ref pos);
-                }
-                catch (Exception ex)
-                {
-                    throw new ArgumentException("Nachkommaanteil ist fehlerhaft", ex);
-                }
-            }
-          
 
             if (_nrIsNegative)
             {
